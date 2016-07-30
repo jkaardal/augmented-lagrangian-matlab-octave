@@ -11,7 +11,7 @@
 % ** Nonlinear problems may also require tuning of the increment parameter, gma, to improve
 %   convergence.
 
-p = 6;
+p = 1;
 
 gma = 10;
 
