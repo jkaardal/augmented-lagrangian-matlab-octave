@@ -322,11 +322,11 @@ function [x, fval, lambda, kkt] = almSolve(p, x0, lambda0, options)
 
         P = @(s, lambda, rho)deal(L(s, lambda, rho), s-DxPr(s, lambda, rho));
         if neq && nineq
-            KKT = @(s, lambda, rho)deal(df(s(1:nvar)) - [dce(s(1:nvar)), dci(s(1:nvar))]*lambda, ce(s(1:nvar)), ci(s(1:nvar)));
+            KKT = @(s, lambda, rho)deal(s - DxPr(s, lambda, rho), ce(s(1:nvar)), ci(s(1:nvar)));
         elseif nineq
             KKT = @(s, lambda, rho)deal(s - DxPr(s, lambda, rho), 0.0, ci(s(1:nvar)));
         elseif neq
-            KKT = @(s, lambda, rho)deal(df(s(1:nvar)) - dce(s(1:nvar))*lambda, ce(s(1:nvar)), 0.0);
+            KKT = @(s, lambda, rho)deal(DxL(s, lambda, rho), ce(s(1:nvar)), 0.0);
         else
             KKT = @(s, lambda, rho)deal(df(s(1:nvar)), 0.0, 0.0);
         end
@@ -375,7 +375,7 @@ function [x, fval, lambda, kkt] = almSolve(p, x0, lambda0, options)
         L = @(x, lambda, rho)(f(x) - ce(x)*lambda + rho/2*norm(ce(x))^2);
         DxL = @(x, lambda, rho)(df(x) - dce(x)*lambda + rho*dce(x)*ce(x)');
 
-        KKT = @(x, lambda, rho)deal(df(x) - dce(x)*lambda, ce(x), 0.0);
+        KKT = @(x, lambda, rho)deal(DxL(x, lambda, rho), ce(x), 0.0);
 
         x = x0;
         if nargin < 3 || isempty(lambda0)
