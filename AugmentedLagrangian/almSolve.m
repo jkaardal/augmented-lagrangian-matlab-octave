@@ -267,7 +267,9 @@ function [x, fval, lambda, kkt] = almSolve(p, x0, lambda0, options)
 
     if algorithm == 1
         fprintf('Warning: unconstrained problems are better solved with fminunc.m instead of almSolve.m.\n');
-        x = almSearch(f, df, x, [], 0.0, 0.0, lb, ub, Xtol, alpha, miter);
+        lb = NaN(size(x0));
+        ub = NaN(size(x0));
+        x = almSearch(f, df, x0, [], 0.0, 0.0, lb, ub, Xtol, alpha, miter);
         fval = f(x);
         lambda = [];
         kkt{1} = df(x);
